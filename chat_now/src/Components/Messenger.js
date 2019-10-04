@@ -1,4 +1,4 @@
-import React, { Component } from 'react' ;
+import React, { Component } from 'react';
 import '../Css/Message.css';
 import axios from 'axios';
 import io from "socket.io-client";
@@ -19,95 +19,115 @@ class Message extends Component {
       logoutUser: false,
     }
     this.socket = io('172.24.125.244:8000');
-    
-    this.socket.on('messageList', function(data) {
+
+    this.socket.on('messageList', function (data) {
       message(data);
     });
 
-    this.socket.on('receivingMessage', function(data) {
+    this.socket.on('receivingMessage', function (data) {
       addMessage(data);
     });
 
     const message = (data) => {
-      this.setState({messages: [...this.state.messages, data]})
+      this.setState({ messages: [...this.state.messages, data] })
     }
 
     const addMessage = (data) => {
-      this.setState({messages: [...this.state.messages, data]});
+      this.setState({ messages: [...this.state.messages, data] });
     };
 
-    this.socket.on('onlineUsers',function(data) {
+    this.socket.on('onlineUsers', function (data) {
       updateUser(data);
     });
 
     const updateUser = (data) => {
-      this.setState({onlineuser: data.newuser});
+      this.setState({ onlineuser: data.newuser });
     }
   }
   sendMessage(event) {
     event.preventDefault();
-    axios.post(`http://172.24.125.244:8000/message`,{
+    axios.post(`http://172.24.125.244:8000/message`, {
       name: this.state.user.name,
       message: this.state.message,
       time: new Date(),
     }).then(result => {
-       console.log(result);
+      console.log(result);
     });
     this.socket.emit('sendingMessage', {
       author: this.state.user.name,
       message: this.state.message,
       time: moment(new Date()).format('h:mm:ss a'),
     });
-    this.setState({message: ''});
+    this.setState({ message: '' });
   }
   logout(event) {
     event.preventDefault();
     axios.delete(`http://172.24.125.244:8000/login/${this.state.user.name}`)
-    .then(result => {
-      this.socket.emit('newUser', {
-        newuser: result.data
+      .then(result => {
+        this.socket.emit('newUser', {
+          newuser: result.data
+        });
+        localStorage.clear();
+        this.setState({
+          logoutUser: true,
+        });
       });
-      localStorage.clear();
-      this.setState({
-        logoutUser: true,
-      });
-    });
   }
   componentWillMount() {
     axios.get(`http://172.24.125.244:8000/login`)
-    .then (result => {
-      this.socket.emit('newUser', {
-        newuser: result.data,
-      });
-    })
-    axios.get(`http://172.24.125.244:8000/message`)
-    .then(result => {
-      const resultData = result.data.messageList;
-      resultData.map(resultData => {
-        this.socket.emit('oldMessage', {
-          author:resultData.senderName,
-          message: resultData.message,
-          time:resultData.time,
+      .then(result => {
+        this.socket.emit('newUser', {
+          newuser: result.data,
         });
       })
-    });
+    axios.get(`http://172.24.125.244:8000/message`)
+      .then(result => {
+        const resultData = result.data.messageList;
+        resultData.map(resultData => {
+          this.socket.emit('oldMessage', {
+            author: resultData.senderName,
+            message: resultData.message,
+            time: resultData.time,
+          });
+        })
+      });
     this.setState({
       user: JSON.parse(localStorage.getItem("results"))
     });
   }
   render() {
-    if(localStorage.getItem("results") === null ) {
-      return(<Redirect to = "/login" />);
+    if (localStorage.getItem("results") === null) {
+      return (<Redirect to="/login" />);
     }
-    if(this.state.logoutUser) {
-      return(<Redirect to = "/login" />);
+    if (this.state.logoutUser) {
+      return (<Redirect to="/login" />);
     }
-    return(
+    return (
       <div className="Message">
+        <div className="OnlineUsers">
+            <h4>ONLINE USERS</h4>
+            {this.state.onlineuser.map(onlineUser => {
+              if (!(onlineUser === this.state.user.name)) {
+                return (
+                  <div>
+                    <ul className="ListItem" key={onlineUser} >
+                      <img src={online} className="Online" alt="online" />
+                      {/* {onlineUser} */}
+                      {/* <a  href="/forgotpassword" target="_blank">{onlineUser}</a> */}
+                      <Link to="/privateChat" target="_blank" exact="true" >{onlineUser}</Link>
+                    </ul>
+                  </div>
+                )
+              }
+            })}
+          </div>
+          
         <div className="Container">
+        <h6><b>COMMON CHAT</b></h6>
+
           <div className="MessageList">
-          {this.state.messages.map(message => {
-              if(message.author === this.state.user.name) {
+            {this.state.messages.map(message => {
+              if (message.author === this.state.user.name) {
                 return (
                   <div className="MyMessage">
                     {"You"}:{message.message}
@@ -117,7 +137,7 @@ class Message extends Component {
               } else {
                 return (
                   <div className="TextMessage">
-                    { message.author } : { message.message }
+                    {message.author} : {message.message}
                     <div className="Time">{message.time}</div>
                   </div>
                 )
@@ -126,37 +146,22 @@ class Message extends Component {
           </div>
           <div className="ChatBox">
             <form id="message-form" onSubmit={this.sendMessage.bind(this)}>
-              <input type="text" id="message" className="MessageBox" placeholder="Write your message here..." value={ this.state.message } onChange={ event => this.setState({ message: event.target.value }) } required />
+              <input type="text" id="message" className="MessageBox" placeholder="Write your message here..." value={this.state.message} onChange={event => this.setState({ message: event.target.value })} required />
               <input type="submit" className="btn btn-primary btn-sm Send" value="Send" />
             </form>
           </div>
         </div>
         <div className="Profile">
           <div className="User">
-          <span className="UserImage">
-            {this.state.user.image == null?<img src={user_image} className="UserIcon" alt="user_icon" />:<img src={this.state.user.image} className="UserIcon" alt="user_icon" />}
-          </span>
-          <DropdownButton bsStyle="primary" bsSize="large" title={this.state.user.name} id={this.state.user.name} >
-            <MenuItem eventKey="1"><Link to="/profile">My Account</Link></MenuItem>
-            <MenuItem eventKey="2"><Link to="/changepassword">Change Password</Link></MenuItem>
-            <MenuItem eventKey="3" onClick={ this.logout.bind(this) }>Log Out</MenuItem>
-          </DropdownButton>
+            <span className="UserImage">
+              {this.state.user.image == null ? <img src={user_image} className="UserIcon" alt="user_icon" /> : <img src={this.state.user.image} className="UserIcon" alt="user_icon" />}
+            </span>
+            <DropdownButton bsStyle="primary" bsSize="large" title={this.state.user.name} id={this.state.user.name} >
+              <MenuItem eventKey="2"><Link to="/changepassword">Change Password</Link></MenuItem>
+              <MenuItem eventKey="3" onClick={this.logout.bind(this)}>Log Out</MenuItem>
+            </DropdownButton>
           </div>
-          <div className="OnlineUsers">
-            <h4>ONLINE USERS</h4>
-            { this.state.onlineuser.map(onlineUser => {
-              if(!(onlineUser === this.state.user.name)) {
-                return (
-                  <div>
-                    <ul className="ListItem" key={ onlineUser } >
-                    <img src={online} className="Online" alt="online" />
-                      { onlineUser }
-                    </ul>
-                  </div>
-                )
-              }
-            })}
-          </div>
+          
         </div>
       </div>
     );

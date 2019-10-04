@@ -11,6 +11,7 @@ import Messenger from './Components/Messenger';
 import ChangePassword from './Components/changePassword';
 import UserDetails from './Components/UserDetails';
 import ForgotPassword from './Components/ForgotPassword';
+import privateChat from './Components/privateChat';
 import './App.css';
 class App extends Component {
   render() {
@@ -27,6 +28,7 @@ class App extends Component {
             <Route exact path="/changepassword"  component={ChangePassword} />
             <Route exact path="/profile"  component={UserDetails} />
             <Route exact path="/forgotpassword"  component={ForgotPassword} />
+            <Route exact path="/privateChat"  component={privateChat} />
           </div>
         </div>
       </HashRouter>

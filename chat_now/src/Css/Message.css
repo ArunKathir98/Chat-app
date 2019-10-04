@@ -3,7 +3,8 @@ body {
   margin: 0px;
   padding: 0px;
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+ }
 
 * {
   box-sizing: border-box;
@@ -18,13 +19,14 @@ body {
   margin-right: 0px;
 }
  .OnlineUsers {
-  margin-top: 50px;
-  margin-left: 20px;
-  width: 80%;
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 30%;
   height: 500px;
-  border: groove 3px rgba(20, 99, 158, 0.9 );
+  border: groove 3px rgba(241, 142, 245, 0.9);
   text-align: center;
-  color: rgb(20, 99, 158);
+  color: rgb(235, 17, 53);
+  float: left;
 }
 .MessageBox {
   width: 80%;

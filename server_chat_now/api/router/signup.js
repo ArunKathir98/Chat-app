@@ -99,22 +99,7 @@ router.put('/forgotpassword/:email',(req,res,next) => {
   });
 });
 
-router.put('/image/:userId',(req,res,next) => {
-  const id = req.params.userId;
-  user.find({_id:id})
-  .exec()
-  .then(data => {
-    user.findOneAndUpdate({_id:id},{image:req.body.image})
-    .then(result => {
-      res.status(200).json(result)
-    })
-    .catch(error => {
-      res.status(500).json({
-        error:error,
-      })
-    })
-  })
-})
+
 router.delete('/:userId',(req,res,next) =>{
   const id=req.params.userId;
   user.remove({_id:id}).exec()

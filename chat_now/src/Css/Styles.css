@@ -104,18 +104,15 @@ ul.Home li a {
   background-color: #a1f0a5;
 }
 .ButtonHome {
-  background-color: #a1f0a5;
-  border-style: none;
+  background-color: #9ca4f1;
+  border-style:solid;
   display: inline;
-  height: 28px;
+  height: 35px;
+  width: 80px;
   color: white;
-  padding-left: 7px;
-  padding-top: 1px;
-  margin-right: 500px;
-  margin-left: 10px;
 }
 .ButtonLogout {
-  background-color: #14639e;
+  background-color: #f53030;
   border-style: none;
   display: inline;
   height: 28px;

@@ -51,7 +51,7 @@ class ForgotPassword extends Component {
         <div className="input-group Data">
           <input className="form-control" ref="email" title="Enter a valid email" type="email" placeholder="Email" onChange={ event => this.setState({email:event.target.value}) } required />
         </div>
-          <label>Which is you favourite place ?</label>
+          <label>Which is your favourite color?</label>
           <div className="input-group Data">
             <input className="form-control" ref="securityQuestion" title="Enter a valid answer" type="text" placeholder="Security Question " onChange={ event => this.setState({securityQuestion:event.target.value}) } required />
           </div>

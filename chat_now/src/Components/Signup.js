@@ -145,7 +145,7 @@ class Signup extends Component {
            <input className="form-control" maxLength="10" ref="confirmPassword" title="Password should be Alphanumeric with maxlength 10" type="password" placeholder="Confirm Password" onChange={event => this.setState({ confirmPassword: event.target.value })} required />
           </div>
           <div className="Error">{this.state.confirmPassword_error}</div>
-          <label>Security Question-Favourite place ?</label>
+          <label>Security Question-Favourite color ?</label>
           <div className="input-group Data">
             <input className="form-control" ref="securityQuestion" title="Enter a valid answer" type="text" placeholder="Your answer" onChange={event => this.setState({ securityQuestion: event.target.value })} required />
           </div>
